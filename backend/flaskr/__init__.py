@@ -132,11 +132,16 @@ def create_app(test_config=None):
     def create_question():
         body = request.get_json()
 
-        new_question = body.get('question')
-        new_answer = body.get('answer')
-        new_category = body.get('category')
-        new_difficulty = body.get('difficulty')
         search = body.get('searchTerm')
+
+        new_data = {}
+
+        # Check for required fields.
+        if not search:
+            for field in ['question', 'answer', 'category', 'difficulty']:
+                new_data[field] = body.get(field)
+                if not new_data[field]:
+                    abort(400, f'Missing required field: {field}')
 
         try:
             if search:
@@ -151,10 +156,10 @@ def create_app(test_config=None):
                 })
             else:
                 question = Question(
-                    question=new_question,
-                    answer=new_answer,
-                    category=new_category,
-                    difficulty=new_difficulty
+                    question=new_data['question'],
+                    answer=new_data['answer'],
+                    category=new_data['category'],
+                    difficulty=new_data['difficulty']
                 )
                 question.insert()
 
@@ -230,12 +235,15 @@ def create_app(test_config=None):
     @app.route('/quizzes', methods=['POST'])
     def get_next_question():
         body = request.get_json()
+
         previous_question_ids = body.get('previous_questions', [])
-        print(f'previous_question_ids={previous_question_ids}')
         category_id = body.get('previous_category')
 
-        recs = Question.query.filter(Question.category == category_id).filter(Question.id.notin_(previous_question_ids)).all()
-        print(f'recs={recs}')
+        if category_id:
+            recs = Question.query.filter(Question.category == category_id).filter(
+                Question.id.notin_(previous_question_ids)).all()
+        else:
+            recs = Question.query.filter(Question.id.notin_(previous_question_ids)).all()
         if not recs:
             question = None
         else:
@@ -282,5 +290,13 @@ def create_app(test_config=None):
             'error': 405,
             'message': 'method not allowed'
         }), 405
+
+    @app.errorhandler(500)
+    def server_error(error):
+        return jsonify({
+            'success': False,
+            'error': 500,
+            'message': 'internal server error'
+        }), 500
 
     return app
