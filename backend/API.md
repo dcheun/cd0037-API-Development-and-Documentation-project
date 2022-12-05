@@ -30,37 +30,19 @@ There are `5` error types that can be returned from the API, including:
     - `success` - The success value.
     - `questions` - List of question objects, paginated.
     - `current_category` - If provided, the category of the `questions` list.
-    - `categories` - List of all categories.
+    - `categories` - Dictionary containing categories keyed by corresponding id.
     - `total_questions` - The number of total questions.
 - Sample: `curl http://127.0.0.1:5000/questions?page=1`
 ```json
 {
-    "categories": [
-        {
-            "id": 1,
-            "type": "Science"
-        },
-        {
-            "id": 2,
-            "type": "Art"
-        },
-        {
-            "id": 3,
-            "type": "Geography"
-        },
-        {
-            "id": 4,
-            "type": "History"
-        },
-        {
-            "id": 5,
-            "type": "Entertainment"
-        },
-        {
-            "id": 6,
-            "type": "Sports"
-        }
-    ],
+    "categories": {
+        "1": "Science",
+        "2": "Art",
+        "3": "Geography",
+        "4": "History",
+        "5": "Entertainment",
+        "6": "Sports"
+    },
     "current_category": null,
     "questions": [
         {
@@ -135,7 +117,7 @@ There are `5` error types that can be returned from the API, including:
         }
     ],
     "success": true,
-    "total_questions": 21
+    "total_questions": 22
 }
 ```
 
@@ -243,37 +225,19 @@ There are `5` error types that can be returned from the API, including:
   - Retrieves a list of all category objects.
   - Returns:
     - `success` - The success value.
-    - `categories` - List of category objects.
+    - `categories` - Dictionary containing categories keyed by corresponding id.
     - `total_categories` The number of total categories.
 - Sample: `curl http://127.0.0.1:5000/categories`
 ```json
 {
-    "categories": [
-        {
-            "id": 1,
-            "type": "Science"
-        },
-        {
-            "id": 2,
-            "type": "Art"
-        },
-        {
-            "id": 3,
-            "type": "Geography"
-        },
-        {
-            "id": 4,
-            "type": "History"
-        },
-        {
-            "id": 5,
-            "type": "Entertainment"
-        },
-        {
-            "id": 6,
-            "type": "Sports"
-        }
-    ],
+    "categories": {
+        "1": "Science",
+        "2": "Art",
+        "3": "Geography",
+        "4": "History",
+        "5": "Entertainment",
+        "6": "Sports"
+    },
     "success": true,
     "total_categories": 6
 }
@@ -325,12 +289,13 @@ There are `5` error types that can be returned from the API, including:
   - Retrieves a random question for the quiz by the following supplied fields.
   - Request body:
     - `previous_questions` - A list of all the previous questions seen, to be excluded for the next question returned.
-    - `previous_category` (optional) - The category of the next question.
+    - `quiz_category` - An object containing information about the current category with the following subfields:
+      - `id` - The id of the category to limit the question to. If an `id` of `0` is supplied, then it will assume ALL categories.
   - Returns:
     - `question` - The next question object.
     - `success` - The success value.
 - Sample: `curl http://127.0.0.1:5000/quizzes -X POST -H "Content-Type: application/json" -d '{
-    "previous_questions": [20], "previous_category": 1 }'`
+    "previous_questions": [20], "quiz_category": {"id": 1} }'`
 ```json
 {
     "question": {

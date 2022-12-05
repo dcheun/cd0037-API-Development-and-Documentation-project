@@ -48,7 +48,7 @@ def create_app(test_config=None):
     @app.route('/categories', methods=['GET'])
     def get_categories():
         recs = Category.query.order_by(Category.id).all()
-        data = [rec.format() for rec in recs]
+        data = {rec.id: rec.type for rec in recs}
 
         if len(data) == 0:
             abort(404)
@@ -80,7 +80,7 @@ def create_app(test_config=None):
             abort(404)
 
         recs = Category.query.order_by(Category.id).all()
-        categories = [rec.format() for rec in recs]
+        categories = {rec.id: rec.type for rec in recs}
 
         return jsonify({
             'success': True,
@@ -185,18 +185,7 @@ def create_app(test_config=None):
     only question that include that string within their question.
     Try using the word "title" to start.
     """
-    # @app.route('/questions/search', methods=['POST'])
-    # def search_questions():
-    #     body = request.get_json()
-    #     search_term = body.get('searchTerm', '')
-    #     matches = Question.query.filter(Question.question.ilike(f'%{search_term}%')).order_by(Question.id).all()
-    #     current_records = paginate(request, matches)
-    #
-    #     return jsonify({
-    #         'success': True,
-    #         'questions': current_records,
-    #         'total_questions': len(Question.query.all())
-    #     })
+    # NOTE: Implemented in above route.
 
     """
     @TODO:
@@ -237,10 +226,10 @@ def create_app(test_config=None):
         body = request.get_json()
 
         previous_question_ids = body.get('previous_questions', [])
-        category_id = body.get('previous_category')
+        quiz_category = body.get('quiz_category')
 
-        if category_id:
-            recs = Question.query.filter(Question.category == category_id).filter(
+        if quiz_category['id'] != 0:
+            recs = Question.query.filter(Question.category == quiz_category['id']).filter(
                 Question.id.notin_(previous_question_ids)).all()
         else:
             recs = Question.query.filter(Question.id.notin_(previous_question_ids)).all()
