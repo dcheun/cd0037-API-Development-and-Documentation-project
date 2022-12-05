@@ -168,27 +168,27 @@ class TriviaTestCase(unittest.TestCase):
     def test_get_next_question(self):
         res = self.client().post('/quizzes', json={
             'previous_questions': [20],
-            'previous_category': 1
+            'quiz_category': {'id': 1}
         })
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertEqual(data['question']['category'], 1)
 
     def test_get_next_question_no_category(self):
         res = self.client().post('/quizzes', json={
-            'previous_questions': [20]
+            'previous_questions': [20],
+            'quiz_category': {'id': 0}
         })
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 200)
         self.assertEqual(data['success'], True)
-        self.assertTrue(data['question']['category'])
 
     def test_get_next_question_no_prev_question(self):
         res = self.client().post('/quizzes', json={
-            'previous_category': 1
+            'previous_questions': [],
+            'quiz_category': {'id': 1}
         })
         data = json.loads(res.data)
 
