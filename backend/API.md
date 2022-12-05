@@ -1,12 +1,10 @@
-## API Reference
+# API Reference
 
----
-
-### Getting Started
+## Getting Started
 - Base URL: This app can be run and hosted locally. By default, it will be listening on `http://127.0.0.1:5000`.
 - Authentication: This version of the API does not require authentication or API keys.
 
-### Error Handling
+## Error Handling
 Errors are returned as JSON objects in the following format:
 ```json
 {
@@ -22,8 +20,8 @@ There are `5` error types that can be returned from the API, including:
 - 422: Not Processable
 - 500: Internal Server Error
 
-### Endpoints
-#### GET /questions
+## Endpoints
+### GET /questions
 - General:
   - Retrieves a list of questions.
   - Query Parameters:
@@ -141,7 +139,7 @@ There are `5` error types that can be returned from the API, including:
 }
 ```
 
-#### POST /questions
+### POST /questions (Create)
 - General:
   - Creates a new question using the supplied fields.
   - Request Body:
@@ -176,7 +174,7 @@ There are `5` error types that can be returned from the API, including:
 }
 ```
 
-#### POST /questions (Search)
+### POST /questions (Search)
 - General:
   - If a `searchTerm` field is provided in the body, this will run a serach on the `question` field of the resource and return a list of results.
   - Request Body:
@@ -212,7 +210,7 @@ There are `5` error types that can be returned from the API, including:
 }
 ```
 
-#### DELETE /questions/<question_id>
+### DELETE /questions/<question_id>
 - General:
   - Deletes the question of the given ID if it exists.
   - Query Parameters:
@@ -240,7 +238,7 @@ There are `5` error types that can be returned from the API, including:
 }
 ```
 
-#### GET /categories
+### GET /categories
 - General:
   - Retrieves a list of all category objects.
   - Returns:
@@ -281,7 +279,7 @@ There are `5` error types that can be returned from the API, including:
 }
 ```
 
-#### GET /categories/<category_id>/questions
+### GET /categories/<category_id>/questions
 - General:
   - Retrieves a list of all question objects by category.
   - Query Parameters:
@@ -322,7 +320,7 @@ There are `5` error types that can be returned from the API, including:
 }
 ```
 
-#### POST /quizzes
+### POST /quizzes
 - General:
   - Retrieves a random question for the quiz by the following supplied fields.
   - Request body:
